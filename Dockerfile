@@ -1,14 +1,9 @@
-# Étape 1 : Utiliser une image PHP avec FPM
-FROM php:8.2-fpm
+# Image PHP officielle
+FROM php:8.2-cli
 
-# Installer les dépendances système et PHP nécessaires pour Symfony
+# Installer dépendances système et PHP pour Symfony
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libicu-dev \
-    libonig-dev \
-    libzip-dev \
-    libpq-dev \
+    git unzip libicu-dev libonig-dev libzip-dev \
     && docker-php-ext-install intl mbstring pdo pdo_mysql zip opcache \
     && rm -rf /var/lib/apt/lists/*
 
@@ -18,17 +13,11 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Copier les fichiers du projet
+# Copier le projet
 COPY . .
 
-# Installer les dépendances PHP via Composer
-RUN composer install --no-interaction --optimize-autoloader
+# Exposer le port pour le serveur PHP interne
+EXPOSE 8000
 
-# Créer les permissions nécessaires pour Symfony
-RUN chown -R www-data:www-data var
-
-# Exposer le port pour PHP-FPM
-EXPOSE 9000
-
-# Commande par défaut
-CMD ["php-fpm"]
+# Lancer Symfony / PHP en foreground
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
