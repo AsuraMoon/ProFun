@@ -64,11 +64,3 @@ Tests
 Exécuter les tests unitaires et fonctionnels dans Docker :
 
 docker compose exec app php bin/phpunit
-Architecture du projet
-bin/          # Scripts exécutables
-config/       # Configuration Symfony
-migrations/   # Migrations Doctrine
-public/       # Point d’entrée web
-src/          # Code source PHP (Controllers, Entities, Services)
-templates/    # Vues Twig
-tests/        # Tests unitaires et fonctionnels
